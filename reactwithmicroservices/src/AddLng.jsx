@@ -1,4 +1,5 @@
 import React,{useState, useEffect} from "react";
+import axios from "axios";
 
 export function AddLng(props){
 
@@ -13,13 +14,24 @@ export function AddLng(props){
 
     
 
-    const postData=()=>{
-       // console.log(props);
-       // console.log(eklenecekLng);
-        props.postData(eklenecekLng);
-    }
+    const  postData=()=>{
+     
+      if(eklenecekLng.id)
+      {
+        axios.put('http://localhost:3118/api/Langs/'+eklenecekLng.id,eklenecekLng)
+      .then(()=>{props.refreshData()});
+      }
+      else
+      {
+      axios.post('http://localhost:3118/api/Langs/',eklenecekLng)
+      .then(()=>{props.refreshData()});
+      }
 
-    const setEkelencekVal=(event)=>{
+ setEklenecekLng({id:0,code:'',name:''});
+    }
+  
+
+    //const setEkelencekVal=(event)=>{
         
         // var existing={id:0,name:'',code:''};
         // existing.id=eklenecekLng.id;
@@ -29,15 +41,17 @@ export function AddLng(props){
         // existing[event.target.name]= event.target.value
         // setEklenecekLng(existing);
 
-        setEklenecekLng(prevState => ({
-            ...prevState,
-            [event.target.name]: event.target.value
-        }))
-       
-    }
+        const setEkelencekVal=(event)=>{
+        
+          setEklenecekLng(prevState => ({
+              ...prevState,
+              [event.target.name]: event.target.value
+          }))
+         
+      }
 
     return(<div className='row'>
-    <div className='col-md-6'>
+     <div className='col-md-6'>
       <div className='form-group'>
         id:<input className='form-control' name='id' onChange={setEkelencekVal} type='text' value={eklenecekLng.id} />
       </div>
